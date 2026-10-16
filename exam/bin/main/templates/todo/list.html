@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>할일 관리</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+  <main>
+    <h1>할일 관리</h1>
+
+    <nav class="filter">
+      <a th:href="@{/todos}" th:classappend="${status == null} ? 'active'">전체</a>
+      <a th:each="s : ${statuses}" th:href="@{/todos(status=${s})}"
+         th:text="${s}" th:classappend="${s == status} ? 'active'">TODO</a>
+      <a class="btn" th:href="@{/todos/new}">+ 새 할일</a>
+    </nav>
+
+    <table>
+      <thead>
+        <tr><th>번호</th><th>제목</th><th>상태</th><th>우선순위</th><th>마감일</th><th>관리</th></tr>
+      </thead>
+      <tbody>
+        <tr th:each="todo : ${todos}">
+          <td th:text="${todo.no}">1</td>
+          <td th:text="${todo.title}">제목</td>
+          <td><span th:text="${todo.status}" th:class="'badge ' + ${todo.status}">TODO</span></td>
+          <td th:text="${todo.priority}">1</td>
+          <td th:text="${todo.dueDate}">2026-01-01</td>
+          <td>
+            <a th:href="@{/todos/{no}/edit(no=${todo.no})}">수정</a>
+            <form th:action="@{/todos/{no}/delete(no=${todo.no})}" method="post" class="inline">
+              <button type="submit">삭제</button>
+            </form>
+          </td>
+        </tr>
+        <tr th:if="${#lists.isEmpty(todos)}"><td colspan="6">등록된 할일이 없습니다.</td></tr>
+      </tbody>
+    </table>
+  </main>
+</body>
+</html>
